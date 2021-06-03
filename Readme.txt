@@ -1,4 +1,4 @@
-This project will run only using TurboC
+This project will run only using TurboC.
 There are few modifications required to make the game run seamlessly.
 There is some page flickering that can be easily noticed, due to which there is delay in the input
 
