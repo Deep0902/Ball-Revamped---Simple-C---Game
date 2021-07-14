@@ -6,23 +6,340 @@
 #include<process.h>
 #include<math.h>
 int life=3;
-int c=0,i=40,j=80,x=0,y=0,r=17,R=15;
-int Y[3]={120,230,340};
-int X[6]={10,500,150,600,10,450};
+int colour=1,lcolour=28;
+int c=0,i=40,j=80,x=0,y=0,virtualRadius=17,Radius=15;  // i & j are the coordinates of the circle, x and y are to update the coordinates
 float p=0,q=0,t=0,LINE=0;
-void lifedisp();
-void line1(int, int, int);
-void line2(int, int, int);
+void lifeDisplay();     //displays the number of lives left
+void gameOverFun();     //Displays Game over
+void levelOne();        //Level 1 code
+void levelTwo();        //Level 2 code
+void levelThree();      //Level 3 code
+void introAndRules();   //graphical description about rules of the game
+void horizontaLineTouch(int, int, int);   //Check weather the circle touches the horizontal line
+void verticalLineTouch(int, int, int);    //Check weather the circle touches the vertical line
 void main()
 {
-    int gd=DETECT,gm,colour=1,lcolour=28;
-    int z;
-    initgraph(&gd,&gm,"C:\\TurboC3\\BGI");
+   int gd=DETECT,gm;
+   initgraph(&gd,&gm,"C:\\TurboC3\\BGI");
 
+   introAndRules();
+   levelOne();
+   levelTwo();
+   levelThree();
+}//main
+
+void horizontaLineTouch(int xh1,int yh,int xh2)   //horizontal line
+{
+   if(c==72 && j<yh+virtualRadius && j>yh-virtualRadius && i>xh1-virtualRadius && i<xh2+virtualRadius) //up
+      {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
+   else if(c==75 && i<xh2+virtualRadius && i>xh1-virtualRadius && j<yh+virtualRadius && j>yh-virtualRadius) //left
+      {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
+   else if(c==77 && i>xh1-virtualRadius && i<xh2+virtualRadius && j<yh+virtualRadius && j>yh-virtualRadius) //right
+      {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
+   else if(c==80 && j<yh+virtualRadius && j>yh-virtualRadius && i>xh1-virtualRadius && i<xh2+virtualRadius) //down
+      {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
+   if(life<1)
+      gameOverFun();
+}
+void verticalLineTouch(int vx, int vy1, int vy2)  // vertical line
+{
+   if(c==72 && i>vx-virtualRadius && i<vx+virtualRadius && j>vy1-virtualRadius && j<vy2+virtualRadius) //up
+      {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
+   else if(c==75 && i>vx-virtualRadius && i<vx+virtualRadius && j>vy1-virtualRadius && j<vy2+virtualRadius)//left
+      {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
+   else if(c==77 && i>vx-virtualRadius && i<vx+virtualRadius && j>vy1-virtualRadius && j<vy2+virtualRadius) //right
+      {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
+   else if(c==80 && i>vx-virtualRadius && i<vx+virtualRadius) //down
+      {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
+   if(life<1)
+      gameOverFun();
+}
+void lifeDisplay()
+{
+ if(life==3)
+  outtextxy(400,20,"Lives left:   ");
+ if(life==2)
+  outtextxy(400,20,"Lives left:  ");
+ if(life==1)
+  outtextxy(400,20,"Lives left: ");
+}
+void gameOverFun()
+{ 
+  cleardevice();
+  setcolor(YELLOW);
+  settextstyle(0,0,2);
+  outtextxy(200,240,"Game Over ! :(");
+  delay(2000);
+  cleardevice();
+  exit(0);
+}
+void levelOne()
+{
+  while(life>0)
+ {
+  setcolor(WHITE);
+  settextstyle(0,0,0);
+  rectangle(10,50,600,450); //main rectangle
+  setcolor(colour);
+  setfillstyle(1,colour);
+  circle(i,j,Radius);  //draw the circle
+  floodfill(i,j,colour);
+  setcolor(lcolour);
+  line(10 ,120,500,120);    horizontaLineTouch(10 ,120,500); 
+  line(150,230,600,230);    horizontaLineTouch(150,230,600); 
+  line(10 ,340,450,340);    horizontaLineTouch(10 ,340,450); 
+
+  setcolor(GREEN);
+  lifeDisplay();
+  setfillstyle(1,colour+1);
+  circle(100,400,15);
+ // floodfill(100,400,GREEN);
+  setcolor(WHITE);
+  outtextxy(110,20,"Press Q to exit");
+
+  if(kbhit())
+  {
+   c=getch();
+   if(c==72)//up
+      {  x=0; y=-1;   }
+   else if(c==75)//left
+      {  x=-1; y=0;   }
+   else if(c==77)//right
+      {  x=1; y=0;    }
+   else if(c==80)//down
+      {  x=0; y=1;    }
+   else if(c==113 || c==81)
+      { cleardevice(); exit(0);    }
+
+   //circle restrict
+   if(c==72&&j<70)//up
+      {  x=0; y=0;    }
+   else if(c==75&&i<30)//left
+      {  x=0; y=0;   }
+   else if(c==77&&i>580)//right
+      {  x=0; y=0;   }
+   else if(c==80&&j>430)//down
+      {  x=0; y=0;   }
+
+   }//if
+    i=i+(5*x);    //increment the coordinates of circle
+    j=j+(5*y);
+    x=0;y=0;
+    delay(20);
+    cleardevice();
+
+    if(pow(pow((100-i),2)+pow((400-j),2),0.5)<=35)    //exit hole
+     { setcolor(WHITE); settextstyle(0,0,1); cleardevice(); outtextxy(178,240,"Congratulations ! Level 1 Clear"); delay(1500); return;  }
+
+    rectangle(610,50,615,300);      //timer
+    line(610,p+50,615,p+50);
+    p=p+0.05;
+    if(p>250)
+      {  setcolor(GREEN); settextstyle(0,0,2); cleardevice(); outtextxy(130,220,"OMG! You ran out of time"); delay(2000); exit(0); }
+ }//while level 1
+}
+void levelTwo()
+{
+ int linetop[3]={130,200,280};      
+ int linever[3]={350,430,490};
+ int linebot[3]={210,270,350};
+ int linepos[3]={0,1,0};
+ setcolor(WHITE);
+ i=40,j=80;
+ cleardevice();
+ settextstyle(0,0,3);
+ outtextxy(220,240,"Level 2");
+ delay(1500);
+ cleardevice();
+ while(life>0)
+ {
+  setcolor(WHITE);
+  settextstyle(0,0,0);
+  rectangle(10,50,600,450); //main rectangle
+  setcolor(colour);
+  setfillstyle(1,colour);
+  circle(i,j,Radius);
+  floodfill(i,j,colour);
+  setcolor(lcolour);
+	     line(295,49,295,380);      verticalLineTouch(295,50,380);
+	     line(100,51,100,350);      verticalLineTouch(100,50,350);
+	     line(200,120,200,449);     verticalLineTouch(200,120,449);
+	     line(295,380,530,380);	  horizontaLineTouch(295,380,530);
+	     line(360,290,599,290);	  horizontaLineTouch(360,290,599);
+	     line(295,200,530,200);	  horizontaLineTouch(295,200,530);
+	     line(360,120,599,120);     horizontaLineTouch(360,120,599);
+  setcolor(GREEN);
+  lifeDisplay(); 	                        // green circle
+  setfillstyle(1,colour+1);
+  circle(560,90,15);
+  //floodfill(560,90,GREEN);
+  setcolor(WHITE);
+  outtextxy(110,20,"Press Q to exit");
+
+  if(kbhit())
+  {
+   c=getch();
+   if(c==72)//up
+      {  x=0; y=-1;   }
+   else if(c==75)//left
+      {  x=-1; y=0;   }
+   else if(c==77)//right
+      {  x=1; y=0;    }
+   else if(c==80)//down
+      {  x=0; y=1;    }
+   else if(c==113 || c==81)
+      { cleardevice(); exit(0);    }
+
+   //circle restrict
+   if(c==72&&j<70)//up
+      {  x=0; y=0;    }
+   else if(c==75&&i<30)//left
+      {  x=0; y=0;   }
+   else if(c==77&&i>580)//right
+      {  x=0; y=0;   }
+   else if(c==80&&j>430)//down
+      {  x=0; y=0;   }
+   }//if
+
+   setcolor(RED);                  // moving red lines
+   for(int I=0; I<3; I++)
+   {
+	  if(linepos[I]==0)
+	      {   line(linever[I],linetop[I],linever[I],linebot[I]); verticalLineTouch(linever[I],linetop[I],linebot[I]); linetop[I]++; linebot[I]++;   }
+	  else if(linepos[I]==1)
+	      {   line(linever[I],linetop[I],linever[I],linebot[I]); verticalLineTouch(linever[I],linetop[I],linebot[I]); linetop[I]--; linebot[I]--;   }
+
+	  if(linetop[I]==52)
+	     linepos[I]=0;
+	  else if(linebot[I]==449)
+	     linepos[I]=1;
+   }
+   setcolor(WHITE);
+   i=i+(4*x);     //increment coordinates of the circle
+   j=j+(4*y);
+   x=0;y=0;
+   delay(20);
+   cleardevice();
+
+   if(pow(pow((560-i),2)+pow((90-j),2),0.5)<=35)    //exit hole
+     { setcolor(WHITE); settextstyle(0,0,1); cleardevice(); outtextxy(178,240,"Congratulations ! Level 2 Clear"); delay(1500); return;}
+
+   rectangle(610,50,615,300);       //timer
+   line(610,q+50,615,q+50);
+   q=q+0.03;
+   if(q>250)
+      {  setcolor(GREEN); settextstyle(0,0,2); cleardevice(); outtextxy(130,220,"OMG! You ran out of time"); delay(2000); exit(0); }
+
+ }// while level2
+}
+void levelThree()
+{
+ int Linetop[5]={130,200,280,80,350};
+ int Linever[5]={330,380,430,480,530};
+ int Linebot[5]={210,270,350,150,430};
+ int Linepos[5]={0,1,0,1,1};
+ setcolor(WHITE);
+
+ i=40,j=80;
+ cleardevice();
+ settextstyle(0,0,3);
+ outtextxy(220,240,"Level 3");
+ delay(1500);
+ cleardevice();
+ while(life>0)
+ {
+  setcolor(WHITE);
+  settextstyle(0,0,0);
+  rectangle(10,50,600,450); //main rectangle
+  setcolor(colour);
+  setfillstyle(1,colour);
+  circle(i,j,Radius);
+  floodfill(i,j,colour);
+  setcolor(lcolour);
+	     line(295,49,295,380);      verticalLineTouch(295,49,380);
+	     line(10,120,190,120);      horizontaLineTouch(10,120,190);
+	     line(250,120,295,120);     horizontaLineTouch(250,120,295);
+	     line(10,190,50,190);       horizontaLineTouch(10,190,50);
+	     line(110,190,295,190);     horizontaLineTouch(110,190,295);
+	     line(10,250,230,250);      horizontaLineTouch(10,250,230);
+	     line(100,310,295,310);     horizontaLineTouch(100,310,295);
+	     line(100,310,100,390);     verticalLineTouch(100,310,390);
+	     line(190,370,190,449);     verticalLineTouch(190,370,449);
+	     line(295,380,530,380);	  horizontaLineTouch(295,380,530);
+	     line(360,290,599,290);	  horizontaLineTouch(360,290,599);
+	     line(295,200,530,200);	  horizontaLineTouch(295,200,530);
+	     line(360,120,599,120);     horizontaLineTouch(360,120,599);
+  setcolor(GREEN);
+  lifeDisplay(); 	                        // green circle
+  setfillstyle(1,colour+1);
+  circle(560,90,15);
+//  floodfill(560,90,GREEN);
+  setcolor(WHITE);
+  outtextxy(110,20,"Press Q to exit");
+
+  if(kbhit())
+  {
+   c=getch();
+   if(c==72)//up
+      {  x=0; y=-1;   }
+   if(c==75)//left
+      {  x=-1; y=0;   }
+   if(c==77)//right
+      {  x=1; y=0;    }
+   if(c==80)//down
+      {  x=0; y=1;    }
+   if(c==113 || c==81)
+      { cleardevice(); exit(0);    }
+
+   //circle restrict
+   if(c==72&&j<70)//up
+      {  x=0; y=0;    }
+   if(c==75&&i<30)//left
+      {  x=0; y=0;   }
+   if(c==77&&i>580)//right
+      {  x=0; y=0;   }
+   if(c==80&&j>430)//down
+      {  x=0; y=0;   }
+   }//if
+
+   setcolor(RED);                  // moving red lines
+   for(int I=0; I<5; I++)
+   {
+	    if(Linepos[I]==0)
+	        {   line(Linever[I],Linetop[I],Linever[I],Linebot[I]); verticalLineTouch(Linever[I],Linetop[I],Linebot[I]); Linetop[I]++; Linebot[I]++;   }
+	    if(Linepos[I]==1)
+	        {   line(Linever[I],Linetop[I],Linever[I],Linebot[I]); verticalLineTouch(Linever[I],Linetop[I],Linebot[I]); Linetop[I]--; Linebot[I]--;   }
+
+	    if(Linetop[I]==52)
+	     Linepos[I]=0;
+	    else if(Linebot[I]==449)
+	     Linepos[I]=1;
+   }
+   setcolor(WHITE);
+
+   i=i+(4*x);     //incerment coordinates of the circle 
+   j=j+(4*y);
+   x=0;y=0;
+   delay(20);
+   cleardevice();
+
+   if(pow(pow((560-i),2)+pow((90-j),2),0.5)<=35)    //exit hole
+     { setcolor(WHITE); settextstyle(0,0,1); cleardevice(); outtextxy(178,240,"Congratulations ! Level 3 Clear"); cleardevice(); outtextxy(178,240,"You've reached the end!"); delay(1500); return;}
+
+   rectangle(610,50,615,300);       //timer
+   line(610,t+50,615,t+50);
+   t=t+0.03;
+   if(t>250)
+      {  setcolor(GREEN); settextstyle(0,0,2); cleardevice(); outtextxy(130,220,"OMG! You ran out of time"); delay(2000); exit(0); }
+
+ }// while level3
+}
+void introAndRules()
+{
     settextstyle(1,0,5);
     setpalette(7,24);
     setpalette(11,15);
-    int a,b;
+    int a,b,z;
     a=0;
     b=0;
 	// getting maximum width
@@ -86,389 +403,4 @@ void main()
     settextstyle(0,0,3);
     outtextxy(220,240,"Level 1");
      delay(2000);
-
-    goto level1;
- level1:while(life>0)
- {
-  setcolor(WHITE);
-  settextstyle(0,0,0);
-  rectangle(10,50,600,450); //main rectangle
-  setcolor(colour);
-  setfillstyle(1,colour);
-  circle(i,j,R);
-  floodfill(i,j,colour);
-  setcolor(lcolour);
-  line(X[0],Y[0],X[1],Y[0]); //line 1
-  line(X[2],Y[1],X[3],Y[1]); //line 2
-  line(X[4],Y[2],X[5],Y[2]); //line 3
-
-
-  setcolor(GREEN);
-  lifedisp();
-  setfillstyle(1,colour+1);
-  circle(100,400,15);
- // floodfill(100,400,GREEN);
-  setcolor(WHITE);
-  outtextxy(110,20,"Press Q to exit");
-
-  if(kbhit())
-  {
-   c=getch();
-   if(c==72)//up
-   {  x=0; y=-1;   }
-   //sound(432);delay(50);nosound();      }
-   if(c==75)//left
-   {  x=-1; y=0;   }
-   //sound(600);delay(50);nosound();      }
-   if(c==77)//right
-   {  x=1; y=0;    }
-    //sound(600);delay(50);nosound();     }
-   if(c==80)//down
-   {  x=0; y=1;    }
-   //sound(432);delay(50);nosound();      }
-   if(c==113 || c==81)
-   { cleardevice(); exit(0);    }
-
-   //circle restrict
-   if(c==72&&j<70)//up
-   {  x=0; y=0;    }
-   if(c==75&&i<30)//left
-   {  x=0; y=0;   }
-   if(c==77&&i>580)//right
-   {  x=0; y=0;   }
-   if(c==80&&j>430)//down
-   {  x=0; y=0;   }
-
-   }//if
-   line1(X[0],Y[0],X[1]); //line 1
-   line1(X[2],Y[1],X[3]); //line 2
-   line1(X[4],Y[2],X[5]); //line 3
-
-    i=i+(4*x);
-    j=j+(4*y);
-    x=0;y=0;
-    delay(20);
-    cleardevice();
-
-    if(pow(pow((100-i),2)+pow((400-j),2),0.5)<=35)    //exit hole
-     { setcolor(WHITE); settextstyle(0,0,1); cleardevice(); outtextxy(178,240,"Congratulations ! Level 1 Clear"); delay(1500); goto level2;  }
-
-    rectangle(610,50,615,300);
-    line(610,p+50,615,p+50);
-    p=p+0.05;
-    if(p>250)
-      {  setcolor(GREEN); settextstyle(0,0,2); cleardevice(); outtextxy(130,220,"OMG! You ran out of time"); delay(2000); exit(0); }
-
-
- }//while level 1
-
-//----------------------------------------LEVEL 2 -----------------------------------------
-
- level2:
- if(life<1)
- {
-  cleardevice();
-  setcolor(YELLOW);
-  settextstyle(0,0,2);
-  outtextxy(200,240,"Game Over ! :(");
-  delay(2000);
-  cleardevice();
-  exit(0);
- }
-
- int linetop[3]={130,200,280};
- int linever[3]={350,430,490};
- int linebot[3]={210,270,350};
- int linepos[3]={0,1,0};
- setcolor(WHITE);
- i=40,j=80;
- cleardevice();
- settextstyle(0,0,3);
- outtextxy(220,240,"Level 2");
- delay(1500);
- cleardevice();
- while(life>0)
- {
-  setcolor(WHITE);
-  settextstyle(0,0,0);
-  rectangle(10,50,600,450); //main rectangle
-  setcolor(colour);
-  setfillstyle(1,colour);
-  circle(i,j,R);
-  floodfill(i,j,colour);
-  setcolor(lcolour);
-
-	   {
-	     line(295,49,295,380);      line2(295,50,380);
-
-	     line(100,51,100,350);      line2(100,50,350);
-	     line(200,120,200,449);     line2(200,120,449);
-	    /* line(10,120,170,120);      line1(10,120,170);
-	     line(240,120,295,120);     line1(240,120,295);
-	     line(10,190,50,190);       line1(10,190,50);
-	     line(120,190,295,190);     line1(120,190,295);
-	     line(10,250,230,250);      line1(10,250,230);
-	     line(100,310,295,310);     line1(100,310,295);
-	     line(100,310,100,390);     line2(100,310,390);
-	     line(190,370,190,449);     line2(190,370,449);*/
-	     line(295,380,530,380);	line1(295,380,530);
-	     line(360,290,599,290);	line1(360,290,599);
-	     line(295,200,530,200);	line1(295,200,530);
-	     line(360,120,599,120); 	line1(360,120,599);
-
-
-	   }
-  setcolor(GREEN);
-  lifedisp(); 	                        // green circle
-  setfillstyle(1,colour+1);
-  circle(560,90,15);
-//  floodfill(560,90,GREEN);
-  setcolor(WHITE);
-  outtextxy(110,20,"Press Q to exit");
-
-  if(kbhit())
-  {
-   c=getch();
-   if(c==72)//up
-   {  x=0; y=-1;   }
-   //sound(432);delay(50);nosound();      }
-   if(c==75)//left
-   {  x=-1; y=0;   }
-   //sound(600);delay(50);nosound();      }
-   if(c==77)//right
-   {  x=1; y=0;    }
-    //sound(600);delay(50);nosound();     }
-   if(c==80)//down
-   {  x=0; y=1;    }
-   //sound(432);delay(50);nosound();      }
-   if(c==113 || c==81)
-   { cleardevice(); exit(0);    }
-
-   //circle restrict
-   if(c==72&&j<70)//up
-   {  x=0; y=0;    }
-   if(c==75&&i<30)//left
-   {  x=0; y=0;   }
-   if(c==77&&i>580)//right
-   {  x=0; y=0;   }
-   if(c==80&&j>430)//down
-   {  x=0; y=0;   }
-   }//if
-
-   setcolor(RED);                  // moving red lines
-   for(int I=0; I<3; I++)
-   {
-	if(linepos[I]==0)
-	{   line(linever[I],linetop[I],linever[I],linebot[I]); line2(linever[I],linetop[I],linebot[I]); linetop[I]++; linebot[I]++;   }
-	if(linepos[I]==1)
-	{   line(linever[I],linetop[I],linever[I],linebot[I]); line2(linever[I],linetop[I],linebot[I]); linetop[I]--; linebot[I]--;   }
-
-
-	   {
-	   if(linetop[I]==52)
-	     linepos[I]=0;
-	    else if(linebot[I]==449)
-	     linepos[I]=1;
-	   }
-   }
-   setcolor(WHITE);
-
-
-   i=i+(4*x);
-   j=j+(4*y);
-   x=0;y=0;
-   delay(20);
-   cleardevice();
-
-   if(pow(pow((560-i),2)+pow((90-j),2),0.5)<=35)    //exit hole
-     { setcolor(WHITE); settextstyle(0,0,1); cleardevice(); outtextxy(178,240,"Congratulations ! Level 2 Clear"); delay(1500); goto level3;}
-
-
-   rectangle(610,50,615,300);
-   line(610,q+50,615,q+50);
-   q=q+0.03;
-   if(q>250)
-   {  setcolor(GREEN); settextstyle(0,0,2); cleardevice(); outtextxy(130,220,"OMG! You ran out of time"); delay(2000); exit(0); }
-
-
-
- }// while level2
-
- //-----------------------------------------LEVEL 3-------------------------------
-
- level3:
- if(life<1)
- {
-  cleardevice();
-  setcolor(YELLOW);
-  settextstyle(0,0,2);
-  outtextxy(200,240,"Game Over ! :(");
-  delay(2000);
-  cleardevice();
-  exit(0);
- }
-
- int Linetop[5]={130,200,280,80,350};
- int Linever[5]={330,380,430,480,530};
- int Linebot[5]={210,270,350,150,430};
- int Linepos[5]={0,1,0,1,1};
- setcolor(WHITE);
-
- i=40,j=80;
- cleardevice();
- settextstyle(0,0,3);
- outtextxy(220,240,"Level 3");
- delay(1500);
- cleardevice();
- while(life>0)
- {
-  setcolor(WHITE);
-  settextstyle(0,0,0);
-  rectangle(10,50,600,450); //main rectangle
-  setcolor(colour);
-  setfillstyle(1,colour);
-  circle(i,j,R);
-  floodfill(i,j,colour);
-  setcolor(lcolour);
-
-	   {
-	     line(295,49,295,380);      line2(295,49,380);
-
-	     line(10,120,190,120);      line1(10,120,190);
-	     line(250,120,295,120);     line1(250,120,295);
-	     line(10,190,50,190);       line1(10,190,50);
-	     line(110,190,295,190);     line1(110,190,295);
-	     line(10,250,230,250);      line1(10,250,230);
-	     line(100,310,295,310);     line1(100,310,295);
-	     line(100,310,100,390);     line2(100,310,390);
-	     line(190,370,190,449);     line2(190,370,449);
-	     line(295,380,530,380);	line1(295,380,530);
-	     line(360,290,599,290);	line1(360,290,599);
-	     line(295,200,530,200);	line1(295,200,530);
-	     line(360,120,599,120); 	line1(360,120,599);
-
-
-	   }
-  setcolor(GREEN);
-  lifedisp(); 	                        // green circle
-  setfillstyle(1,colour+1);
-  circle(560,90,15);
-//  floodfill(560,90,GREEN);
-  setcolor(WHITE);
-  outtextxy(110,20,"Press Q to exit");
-
-  if(kbhit())
-  {
-   c=getch();
-   if(c==72)//up
-   {  x=0; y=-1;   }
-   //sound(432);delay(50);nosound();      }
-   if(c==75)//left
-   {  x=-1; y=0;   }
-   //sound(600);delay(50);nosound();      }
-   if(c==77)//right
-   {  x=1; y=0;    }
-    //sound(600);delay(50);nosound();     }
-   if(c==80)//down
-   {  x=0; y=1;    }
-   //sound(432);delay(50);nosound();      }
-   if(c==113 || c==81)
-   { cleardevice(); exit(0);    }
-
-   //circle restrict
-   if(c==72&&j<70)//up
-   {  x=0; y=0;    }
-   if(c==75&&i<30)//left
-   {  x=0; y=0;   }
-   if(c==77&&i>580)//right
-   {  x=0; y=0;   }
-   if(c==80&&j>430)//down
-   {  x=0; y=0;   }
-   }//if
-
-   setcolor(RED);                  // moving red lines
-   for(int I=0; I<5; I++)
-   {
-	if(Linepos[I]==0)
-	{   line(Linever[I],Linetop[I],Linever[I],Linebot[I]); line2(Linever[I],Linetop[I],Linebot[I]); Linetop[I]++; Linebot[I]++;   }
-	if(Linepos[I]==1)
-	{   line(Linever[I],Linetop[I],Linever[I],Linebot[I]); line2(Linever[I],Linetop[I],Linebot[I]); Linetop[I]--; Linebot[I]--;   }
-
-
-	   {
-	   if(Linetop[I]==52)
-	     Linepos[I]=0;
-	    else if(Linebot[I]==449)
-	     Linepos[I]=1;
-	   }
-   }
-   setcolor(WHITE);
-
-
-   i=i+(4*x);
-   j=j+(4*y);
-   x=0;y=0;
-   delay(20);
-   cleardevice();
-
-   if(pow(pow((560-i),2)+pow((90-j),2),0.5)<=35)    //exit hole
-     { setcolor(WHITE); settextstyle(0,0,1); cleardevice(); outtextxy(178,240,"Congratulations ! Level 3 Clear"); delay(1500); break;}
-
-
-   rectangle(610,50,615,300);
-   line(610,t+50,615,t+50);
-   t=t+0.03;
-   if(t>250)
-   {  setcolor(GREEN); settextstyle(0,0,2); cleardevice(); outtextxy(130,220,"OMG! You ran out of time"); delay(2000); exit(0); }
-
-
-
- }// while level3
-
- if(life<1)
- {
-  cleardevice();
-  setcolor(YELLOW);
-  settextstyle(0,0,2);
-  outtextxy(200,240,"Game Over ! :(");
-  delay(2000);
-  cleardevice();
-  exit(0);
- }
-}//main
-
-
-void line1(int xh1,int yh,int xh2)   //horizontal line
-{
-   if(c==72 && j<yh+r && j>yh-r && i>xh1-r && i<xh2+r) //up
-   {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
-   if(c==75 && i<xh2+r && i>xh1-r && j<yh+r && j>yh-r) //left
-   {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
-   if(c==77 && i>xh1-r && i<xh2+r && j<yh+r && j>yh-r) //right
-   {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
-   if(c==80 && j<yh+r && j>yh-r && i>xh1-r && i<xh2+r) //down
-   {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
-}
-
-void line2(int vx, int vy1, int vy2)  // vertical line
-{
-   if(c==72 && i>vx-r && i<vx+r && j>vy1-r && j<vy2+r) //up
-   {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
-   if(c==75 && i>vx-r && i<vx+r && j>vy1-r && j<vy2+r)//left
-   {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
-   if(c==77 && i>vx-r && i<vx+r && j>vy1-r && j<vy2+r) //right
-   {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
-   if(c==80 && i>vx-r && i<vx+r) //down
-   {  x=0; y=0; setcolor(RED); settextstyle(0,0,2); cleardevice(); outtextxy(130,240,"Oops! You touched the line"); delay(2000); life--; i=40; j=80;   }
-
-}
-
-void lifedisp()
-{
- if(life==3)
-  outtextxy(400,20,"Lives left:   ");
- if(life==2)
-  outtextxy(400,20,"Lives left:  ");
- if(life==1)
-  outtextxy(400,20,"Lives left: ");
 }
