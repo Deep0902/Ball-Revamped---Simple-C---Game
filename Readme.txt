@@ -1,6 +1,5 @@
 Successfully created a game, wherein you need to control a ball that must reach the target before a timer runs out, while dogging obstacles!
 
-
 My role was to design and implement an algorithm for multiple scenarios in the program, 
 like making necessary changes that the ball and the game in general is supposed to do when a specific action is performed, 
 calculating the score based on time and lives remaining.
